@@ -1732,3 +1732,8 @@ main::before {
   width: 60px;
   min-width: 60px;
 }
+
+.swiper-slide-new {
+  width: 60px !important;
+  margin-right: 0 !important;
+}
