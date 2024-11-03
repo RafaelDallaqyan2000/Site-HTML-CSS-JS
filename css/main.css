@@ -1623,7 +1623,7 @@ main::before {
   display: flex;
   align-items: end;
   justify-content: space-between;
-  margin-top: 25px;
+  margin-top: 10px;
 }
 .product-characteristics .box {
   display: flex;
@@ -1642,13 +1642,13 @@ main::before {
   line-height: 19.43px;
   letter-spacing: -0.0539620817px;
 }
-.product-characteristics .show-more {
+.product-characteristics.show-more {
   font-family: "Asap", sans-serif;
   font-size: 9px;
   font-weight: 100;
-  line-height: 19.63px;
   color: #6c5a59;
-  border-bottom: 1px solid #6c5a59;
+  /* line-height: 19.63px; */
+  /* border-bottom: 1px solid #6c5a59; */
 }
 
 .characteristics-modal {
