@@ -1723,7 +1723,6 @@ main::before {
 
 .swiper-new {
   width: 60px !important;
-  height: 60px;
   display: flex;
   gap: 8px;
 }
@@ -1732,5 +1731,4 @@ main::before {
   border-radius: 8px;
   width: 60px;
   min-width: 60px;
-  height: 60px;
 }

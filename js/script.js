@@ -25,8 +25,7 @@ const caruselNew = document.getElementById('swiper-new');
 for (let index = 0; index < 8; index++) {
   const img = '<img src="../images/order-img-1.png" width="60" height="60" />';
   const newDiv = document.createElement('div');
-  newDiv.setAttribute('class', 'swiper-slide')
-  const newImg = document.createElement('img');
+  // const newImg = document.createElement('img');
   // caruselNew.appendChild(newDiv)
   newDiv.innerHTML = img;
   caruselNew.appendChild(newDiv);
