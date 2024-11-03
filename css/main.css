@@ -1717,7 +1717,7 @@ main::before {
   display: flex;
   /* gap: 8px; */
   margin-top: 15px;
-  overflow-y: scroll;
+  overflow-y: clip;
   width: 100%;
 }
 
