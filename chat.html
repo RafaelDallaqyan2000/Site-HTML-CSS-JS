@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Aleo:ital,wght@0,100..900;1,100..900&family=Asap:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alef:wght@400;700&family=M+PLUS+1:wght@100..900&display=swap"
+    rel="stylesheet">
+  <!-- link normalize css -->
+  <link rel="stylesheet" href="libs/normalize.css">
+  <!-- custom css -->
+  <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+  <div class="wrapper chat-page">
+    <div class="container">
+      <button id="prevButton" class="prev-page">
+        <img src="images/icons/prev-icon.svg" alt="">
+      </button>
+      <div class="search-box">
+        <img src="images/icons/search.svg" alt="">
+        <input type="search" placeholder="Поиск">
+      </div>
+      <div class="chat-section">
+        <div class="chat-date">Сегодня</div>
+        <div>
+          <div class="chat">
+            <div class="chat-box left">
+              <div class="user-box">
+                <span>S</span>
+              </div>
+              <div class="chat-content">
+                <p>
+                  Добрый день! Готова ответить на ваш вопрос.
+                </p>
+                <span class="chat-content__date">17:07</span>
+              </div>
+            </div>
+            <div class="chat-box right">
+              <div class="chat-content">
+                <p>
+                  Добрый день! Готова ответить на ваш вопрос.
+                </p>
+                <span class="chat-content__date">17:07</span>
+              </div>
+              <div class="user-box">
+                <span>Y</span>
+              </div>
+            </div>
+            <div class="write">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <div class="write-box">
+            <textarea placeholder="Напишите сообщение"></textarea>
+            <button class="send-btn">
+              <img src="images/icons/arrow-up.svg" alt="">
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- custom js -->
+  <script src="./js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Aleo:ital,wght@0,100..900;1,100..900&family=Asap:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
+  <!-- link normalize css -->
+  <link rel="stylesheet" href="libs/normalize.css">
+  <!-- custom css -->
+  <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+  <div class="wrapper basket-page">
+    <div class="container">
+      <button id="prevButton" class="prev-page">
+        <img src="images/icons/prev-icon.svg" alt="">
+      </button>
+    </div>
+    <main>
+      <div class="container">
+        <div class="basket">
+          <h2 class="title">КОРЗИНА</h2>
+          <div class="basket-cards">
+            <div class="product">
+              <div class="product-left__box">
+                <img class="product-img" src="images/catalog-img-1.png" alt="" width="62" height="62">
+                <div>
+                  <h4 class="product-name">Ден ден дайко</h4>
+                  <div class="counter">
+                    <button class="decrement"></button>
+                    <span class="count-value">1</span>
+                    <button class="increment"></button>
+                  </div>
+                </div>
+              </div>
+              <h4 class="product-price">990 Р</h4>
+            </div>
+            <div class="product">
+              <div class="product-left__box">
+                <img class="product-img" src="images/catalog-img-1.png" alt="" width="62" height="62">
+                <div>
+                  <h4 class="product-name">Ангел металический</h4>
+                  <div class="counter">
+                    <button class="decrement"></button>
+                    <span class="count-value">1</span>
+                    <button class="increment"></button>
+                  </div>
+                </div>
+              </div>
+              <h4 class="product-price">990 Р</h4>
+            </div>
+          </div>
+        </div>
+        <div class="account-details">
+          <h3 class="account-details__title">Данные аккаунта</h3>
+          <form>
+            <input class="form-control" type="email" placeholder="Введите e-mail">
+            <input class="form-control" type="tel" placeholder="Введите номер телефона">
+            <input class="form-control" type="text" placeholder="Введите Имя и фамилию">
+            <input class="form-control" type="text" placeholder="Введите адрес">
+            <textarea class="form-control form-control__textarea" placeholder="Добавить комментарий"></textarea>
+          </form>
+        </div>
+      </div>
+    </main>
+    <button class="brown-btn order-btn">Оформить заказ</button>
+  </div>
+
+  <div class="order-modal">
+    <div class="modal-content">
+      <h4 class="modal-title">Заказ оформлен</h4>
+      <img src="images/icons/ture.svg" alt="">
+      <button class="brown-btn close-modal">ок</button>
+    </div>
+  </div>
+
+  <!-- custom js -->
+  <script src="./js/script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+https://sound-healing-center.netlify.app/
+https://sound-healing-center.netlify.app/submission.html
+https://sound-healing-center.netlify.app/profile.html
+https://sound-healing-center.netlify.app/product-details.html
+https://sound-healing-center.netlify.app/basket.html
+https://sound-healing-center.netlify.app/intro.html
+https://sound-healing-center.netlify.app/categories.html
+https://sound-healing-center.netlify.app/profile-page.html
+https://sound-healing-center.netlify.app/my-orders.html
+https://sound-healing-center.netlify.app/chat.html
