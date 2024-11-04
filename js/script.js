@@ -1,5 +1,12 @@
 "use strict";
 
+const pathname = document.location.pathname
+console.log(pathname);
+
+try {
+  // if(pathname ===)
+} catch (e) {}
+
 try {
   var swiper = new Swiper('.service-info__swiper', {
     slidesPerView: 3.3,
@@ -19,6 +26,7 @@ try {
 } catch (error) {
 }
 
+try {
 const caruselNew = document.getElementById('swiper-new');
 
 
@@ -31,6 +39,9 @@ for (let index = 0; index < 8; index++) {
   newDiv.innerHTML = img;
   caruselNew.appendChild(newDiv);
   
+}
+} catch(error) {
+
 }
 
 try {
@@ -194,5 +205,48 @@ try {
     intro.style.display = 'none';
   }
 } catch (error) {
-
+console.log(error, '<<<');
 }
+
+
+// URL-ы API
+const showcaseUrl = 'https://24autoposter.ru/sound_healing/shop/showcase';
+const itemDetailsUrl = 'https://24autoposter.ru/sound_healing/shop/showcase/item';
+
+// Функция для получения полного списка объектов магазина (GET запрос)
+async function fetchShowcaseItems() {
+  try {
+    const response = await fetch(showcaseUrl);
+    if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+    const data = await response.json();
+    console.log('Список товаров:', data);
+    return data; // возвращает JSON с объектами магазина
+  } catch (error) {
+    console.error('Ошибка получения списка товаров:', error);
+  }
+}
+
+// Функция для получения описания конкретного продукта (POST запрос)
+async function fetchItemDetails(itemId) {
+  try {
+    const response = await fetch(itemDetailsUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id: itemId })
+    });
+    if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+    const data = await response.json();
+    console.log(`Описание товара с ID ${itemId}:`, data);
+    return data; // возвращает JSON с описанием продукта
+  } catch (error) {
+    console.error(`Ошибка получения описания товара с ID ${itemId}:`, error);
+  }
+}
+
+// Пример использования функций
+fetchShowcaseItems(); // Вызов для получения всех товаров
+
+// Замените "this item id" на нужный ID продукта
+// fetchItemDetails("this item id"); // Вызов для получения описания конкретного товара
