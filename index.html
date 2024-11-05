@@ -119,30 +119,10 @@
       <section class="container categories">
         <div class="top-box">
           <h4>Категории</h4>
-          <a href="categories.html">все категории</a>
+          <!-- <a href="categories.html">все категории</a> -->
         </div>
         <div class="swiper-container categories-swiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <a class="categories-card" href="#!">
-                <img src="images/categories-img-1.png" alt="">
-                <span class="categories-card__title">Гонги</span>
-              </a>
-            </div>
-            <div class="swiper-slide">
-              <a class="categories-card" href="#!">
-                <img src="images/categories-img-2.png" alt="">
-                <span class="categories-card__title">Коши</span>
-              </a>
-            </div>
-            <div class="swiper-slide">
-              <a class="categories-card" href="#!">
-                <img src="images/categories-img-3.png" alt="">
-                <span class="categories-card__title">Калимба</span>
-              </a>
-            </div>
-          </div>
-        </div>
+          <div id="swiper-wrapper-categories" class="swiper-wrapper" />
       </section>
       <!-- categories -->
 
@@ -150,22 +130,11 @@
       <section class="container catalog">
         <div class="top-box">
           <h4>Каталог</h4>
-          <a class="top-box__icon" href="categories.html">
+          <!-- <a class="top-box__icon" href="categories.html">
             <img src="images/icons/shop-icon.svg" alt="">
-          </a>
+          </a> -->
         </div>
-        <div class="catalog-cards">
-          <a href="product-details.html" class="catalog-card">
-            <img class="catalog-card__img" src="images/catalog-img-1.png" alt="">
-            <h3 class="catalog-card__title">Ден ден дайко</h3>
-            <button class="buy-btn">купить</button>
-          </a>
-          <a href="product-details.html" class="catalog-card">
-            <img class="catalog-card__img" src="images/catalog-img-2.png" alt="">
-            <h3 class="catalog-card__title">ангел металлический </h3>
-            <button class="buy-btn">купить</button>
-          </a>
-        </div>
+        <div class="catalog-cards" id="catalog-cards" />
       </section>
       <!-- catalog -->
     </main>

@@ -472,6 +472,7 @@ main::before {
 }
 .categories .swiper-slide {
   height: 128px !important;
+  width: 125px !important;
 }
 .categories-swiper {
   margin-top: 5px;
@@ -512,12 +513,13 @@ main::before {
   margin-top: 10px;
   display: flex;
   align-items: start;
-  gap: 10px;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 .catalog-card {
   max-width: 158.94px;
-  width: 100%;
+  width: 47%;
   padding: 10px 10px 13px 10px;
   border-radius: 11px;
   background: #fffefe;
@@ -537,6 +539,7 @@ main::before {
   letter-spacing: -0.0446131863px;
   color: #0d0d0d;
   margin-bottom: 5px;
+  min-height: 45px;
 }
 
 .buy-btn {

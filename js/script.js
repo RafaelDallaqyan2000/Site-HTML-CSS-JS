@@ -3,9 +3,6 @@
 const pathname = document.location.pathname
 console.log(pathname);
 
-try {
-  // if(pathname ===)
-} catch (e) {}
 
 try {
   var swiper = new Swiper('.service-info__swiper', {
@@ -211,42 +208,116 @@ console.log(error, '<<<');
 
 // URL-ы API
 const showcaseUrl = 'https://24autoposter.ru/sound_healing/shop/showcase';
+// const showcaseUrl = 'https://24autoposter.ru/vkusnaya_argentina/shop/showcase/main';
 const itemDetailsUrl = 'https://24autoposter.ru/sound_healing/shop/showcase/item';
 
-// Функция для получения полного списка объектов магазина (GET запрос)
-async function fetchShowcaseItems() {
-  try {
-    const response = await fetch(showcaseUrl);
-    if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
-    const data = await response.json();
-    console.log('Список товаров:', data);
-    return data; // возвращает JSON с объектами магазина
-  } catch (error) {
-    console.error('Ошибка получения списка товаров:', error);
-  }
+
+async function handleClickCatalogItem(e) {
+  console.log(e, '<<');
+  
 }
+
+(async function fetchShowcaseItems() {
+  
+  if (pathname === '/index.html' || pathname === '/') {
+    
+    try {
+      const response = await fetch(showcaseUrl);
+      if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+      const data = await response.json();
+      const categories = data.categories;
+      const catalog = data.main_page_items;
+      const categoriesContainer = document.getElementById('swiper-wrapper-categories');
+      
+      categories.forEach(e => {        
+        let newDiv = document.createElement('div');
+        let newA = document.createElement('a');
+        let newImg = document.createElement('img');
+        let newSpan = document.createElement('span');
+
+        newDiv.className = 'swiper-slide';
+        newDiv.style.marginRight = '12px';
+        
+        newA.className = 'categories-card swiper-slide-next';
+        newA.href = '#';
+
+        newImg.src = e.category_img;
+        newImg.style.width = '100%';
+
+        newSpan.className = 'categories-card__title';
+        newSpan.innerText = e.category_name;
+
+        newA.appendChild(newImg);
+        newA.appendChild(newSpan);
+        newDiv.appendChild(newA);
+
+        categoriesContainer.appendChild(newDiv);
+      });
+     
+
+      const catalogContainer = document.getElementById("catalog-cards");
+
+      catalog.forEach(e => {
+
+          let newA = document.createElement('a');
+          let newImg = document.createElement('img');
+          let newH3 = document.createElement('h3');
+          let newButton = document.createElement('button');
+
+          newA.id = e.id;
+          newA.className = 'catalog-card';
+          newA.onclick = () => handleClickCatalogItem(e);
+          // newA.href = 'product-details.html';
+          
+          newImg.className = "catalog-card__img";
+          newImg.src = e.img;
+          
+          newH3.className = "catalog-card__title";
+          newH3.innerText = e.name;
+
+          newButton.className = "buy-btn";
+          newButton.innerText = "Купить";
+          
+          newA.appendChild(newImg);
+          newA.appendChild(newH3);
+          newA.appendChild(newButton);
+
+          catalogContainer.appendChild(newA);
+
+      })
+      
+      // Обработка категорий и каталога
+      return data; // возвращает JSON с объектами магазина
+    } catch (error) {
+      console.error('Ошибка получения списка товаров:', error);
+    }
+  };
+}());
+
 
 // Функция для получения описания конкретного продукта (POST запрос)
-async function fetchItemDetails(itemId) {
-  try {
-    const response = await fetch(itemDetailsUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ id: itemId })
-    });
-    if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
-    const data = await response.json();
-    console.log(`Описание товара с ID ${itemId}:`, data);
-    return data; // возвращает JSON с описанием продукта
-  } catch (error) {
-    console.error(`Ошибка получения описания товара с ID ${itemId}:`, error);
-  }
-}
-
+// async function fetchItemDetails() {
+  //   try {
+    //     const response = await fetch(showcaseUrl, {
+      //       method: 'POST',
+      //       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({ id: 795363892 }) // Захардкоженный ID
+//     });
+    
+//     if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+    
+//     const data = await response.json();
+//     console.log('Описание товара:', data);
+    
+//     return data; // возвращает JSON с описанием продукта
+//   } catch (error) {
+//     console.error('Ошибка получения описания товара:', error);
+//   }
+// }
 // Пример использования функций
-fetchShowcaseItems(); // Вызов для получения всех товаров
-
+// fetchShowcaseItems(); // Вызов для получения всех товаров
+// fetchItemDetails()
 // Замените "this item id" на нужный ID продукта
 // fetchItemDetails("this item id"); // Вызов для получения описания конкретного товара
