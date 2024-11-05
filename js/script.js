@@ -212,9 +212,16 @@ const showcaseUrl = 'https://24autoposter.ru/sound_healing/shop/showcase';
 const itemDetailsUrl = 'https://24autoposter.ru/sound_healing/shop/showcase/item';
 
 
+function getItemDetails(itemId) {
+
+}
+
 async function handleClickCatalogItem(e) {
-  console.log(e, '<<');
-  
+  // console.log(e, '<<', document.location);
+  document.location.pathname = 'product-details.html';
+           
+
+
 }
 
 (async function fetchShowcaseItems() {
@@ -267,7 +274,6 @@ async function handleClickCatalogItem(e) {
           newA.id = e.id;
           newA.className = 'catalog-card';
           newA.onclick = () => handleClickCatalogItem(e);
-          // newA.href = 'product-details.html';
           
           newImg.className = "catalog-card__img";
           newImg.src = e.img;
