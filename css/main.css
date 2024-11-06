@@ -513,7 +513,7 @@ main::before {
   margin-top: 10px;
   display: flex;
   align-items: start;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
 }

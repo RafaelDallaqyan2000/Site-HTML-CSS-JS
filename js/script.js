@@ -202,7 +202,7 @@ try {
     intro.style.display = 'none';
   }
 } catch (error) {
-console.log(error, '<<<');
+  console.error(error, '<<<');
 }
 
 
@@ -218,9 +218,26 @@ function getItemDetails(itemId) {
 
 async function handleClickCatalogItem(e) {
   // console.log(e, '<<', document.location);
-  document.location.pathname = 'product-details.html';
+  // document.location.pathname = 'product-details.html';
            
-
+  try {
+    const response = await fetch(itemDetailsUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: e.id
+      })
+    });
+    if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+    const data = await response.json();
+   
+    // Обработка категорий и каталога
+    return data; // возвращает JSON с объектами магазина
+  } catch (error) {
+    console.error('Ошибка получения списка товаров:', error);
+  }
 
 }
 
