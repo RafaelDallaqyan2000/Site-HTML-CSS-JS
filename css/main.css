@@ -509,6 +509,12 @@ main::before {
 .catalog {
   padding-bottom: 20px;
 }
+
+.swiper {
+  width: 100%;
+  height: 400px;
+}
+
 .catalog-cards {
   margin-top: 10px;
   display: flex;

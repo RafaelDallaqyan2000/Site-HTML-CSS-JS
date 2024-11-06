@@ -218,7 +218,6 @@ function getItemDetails(itemId) {
 
 async function handleClickCatalogItem(e) {
   // console.log(e, '<<', document.location);
-  // document.location.pathname = 'product-details.html';
            
   try {
     const response = await fetch(itemDetailsUrl, {
@@ -227,19 +226,22 @@ async function handleClickCatalogItem(e) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id: e.id
+        id: 123
       })
     });
     if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
     const data = await response.json();
-   
+    
+    document.location.pathname = 'product-details.html';
     // Обработка категорий и каталога
     return data; // возвращает JSON с объектами магазина
   } catch (error) {
     console.error('Ошибка получения списка товаров:', error);
+    document.location.pathname = 'product-details.html';
   }
 
 }
+
 
 (async function fetchShowcaseItems() {
   
@@ -344,3 +346,28 @@ async function handleClickCatalogItem(e) {
 // fetchItemDetails()
 // Замените "this item id" на нужный ID продукта
 // fetchItemDetails("this item id"); // Вызов для получения описания конкретного товара
+try {
+  const swiper = new Swiper('.swiper', {
+    // Optional parameters
+    direction: 'horizontal',
+    loop: true,
+  
+    // If we need pagination
+    pagination: {
+      el: '.swiper-pagination',
+    },
+  
+    // Navigation arrows
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+  
+    // And if we need scrollbar
+    scrollbar: {
+      el: '.swiper-scrollbar',
+    },
+  });
+} catch (e) {
+  
+}
