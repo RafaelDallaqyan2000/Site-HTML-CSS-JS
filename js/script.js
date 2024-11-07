@@ -189,6 +189,7 @@ const placeOrderUrl = 'https://24autoposter.ru/sound_healing/shop/order';
 
 const chat_id = 795363892;
 let cartItems = {};
+
 async function handleClickCatalogItem(e) {
   
   await localStorage.setItem('catalogItemId', e.id);
@@ -314,79 +315,108 @@ async function handleClickCatalogItem(e) {
 
 (async function fetchShowcaseItems() {
   
-  if (pathname === '/index.html' || pathname === '/') {
-    
+  if(pathname === '/index.html' || pathname === '/' || pathname === '/categories.html') {
+
     try {
       const response = await fetch(showcaseUrl);
       if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
       const data = await response.json();
-      const categories = data.categories;
-      const catalog = data.main_page_items;
-      const categoriesContainer = document.getElementById('swiper-wrapper-categories');
-      
-      categories.forEach(e => {        
-        let newDiv = document.createElement('div');
-        let newA = document.createElement('a');
-        let newImg = document.createElement('img');
-        let newSpan = document.createElement('span');
+      if(pathname === '/categories.html') {
+        const categoriesCardContainer = document.getElementById('categories-card_container');
 
-        newDiv.className = 'swiper-slide';
-        newDiv.style.marginRight = '12px';
+        data?.categories?.forEach(e => {
+          const categoryLink = document.createElement('a');
+          categoryLink.className = 'categories-card';
+          categoryLink.href = 'profile-page.html';
+          categoryLink.id = e?.category_id;
+
+          // Создаем элемент изображения <img>
+          const categoryImg = document.createElement('img');
+          categoryImg.src = e?.category_img;
+          categoryImg.alt = '';
+
+          // Создаем элемент заголовка <span>
+          const categoryTitle = document.createElement('span');
+          categoryTitle.className = 'categories-card__title';
+          categoryTitle.textContent = e?.category_name;
+
+          // Добавляем изображение и заголовок в ссылку
+          categoryLink.appendChild(categoryImg);
+          categoryLink.appendChild(categoryTitle);
+
+          // Добавляем ссылку в контейнер на странице
+          categoriesCardContainer.appendChild(categoryLink); // Или другой контейнер вместо body
+        })
+
+      } else if (pathname === '/index.html' || pathname === '/') {
+        const categories = data.categories;
+        const catalog = data.main_page_items;
+        const categoriesContainer = document.getElementById('swiper-wrapper-categories');
         
-        newA.className = 'categories-card swiper-slide-next';
-        newA.href = '#';
-
-        newImg.src = e.category_img;
-        newImg.style.width = '100%';
-
-        newSpan.className = 'categories-card__title';
-        newSpan.innerText = e.category_name;
-
-        newA.appendChild(newImg);
-        newA.appendChild(newSpan);
-        newDiv.appendChild(newA);
-
-        categoriesContainer.appendChild(newDiv);
-      });
-     
-
-      const catalogContainer = document.getElementById("catalog-cards");
-
-      catalog.forEach(e => {
-
+        categories.forEach(e => {        
+          let newDiv = document.createElement('div');
           let newA = document.createElement('a');
           let newImg = document.createElement('img');
-          let newH3 = document.createElement('h3');
-          let newButton = document.createElement('button');
+          let newSpan = document.createElement('span');
 
-          newA.id = e.id;
-          newA.className = 'catalog-card';
-          newA.dataset.id = e.id;
-          newA.onclick = () => handleClickCatalogItem(e);
+          newDiv.className = 'swiper-slide';
+          newDiv.style.marginRight = '12px';
           
-          newImg.className = "catalog-card__img";
-          newImg.src = e.img;
-          
-          newH3.className = "catalog-card__title";
-          newH3.innerText = e.name;
+          newA.className = 'categories-card swiper-slide-next';
+          newA.href = '#';
 
-          newButton.className = "buy-btn";
-          newButton.innerText = "Купить";
-          
+          newImg.src = e.category_img;
+          newImg.style.width = '100%';
+
+          newSpan.className = 'categories-card__title';
+          newSpan.innerText = e.category_name;
+
           newA.appendChild(newImg);
-          newA.appendChild(newH3);
-          newA.appendChild(newButton);
+          newA.appendChild(newSpan);
+          newDiv.appendChild(newA);
 
-          catalogContainer.appendChild(newA);
+          categoriesContainer.appendChild(newDiv);
+        });
+      
 
-      });
+        const catalogContainer = document.getElementById("catalog-cards");
 
-      // Обработка категорий и каталога
-      return data; // возвращает JSON с объектами магазина
+        catalog.forEach(e => {
+
+            let newA = document.createElement('a');
+            let newImg = document.createElement('img');
+            let newH3 = document.createElement('h3');
+            let newButton = document.createElement('button');
+
+            newA.id = e.id;
+            newA.className = 'catalog-card';
+            newA.dataset.id = e.id;
+            newA.onclick = () => handleClickCatalogItem(e);
+            
+            newImg.className = "catalog-card__img";
+            newImg.src = e.img;
+            
+            newH3.className = "catalog-card__title";
+            newH3.innerText = e.name;
+
+            newButton.className = "buy-btn";
+            newButton.innerText = "Купить";
+            
+            newA.appendChild(newImg);
+            newA.appendChild(newH3);
+            newA.appendChild(newButton);
+
+            catalogContainer.appendChild(newA);
+
+        });
+
+        // Обработка категорий и каталога
+        return data; // возвращает JSON с объектами магазина
+      };
     } catch (error) {
       console.error('Ошибка получения списка товаров:', error);
     }
-  };
+  }
 }());
 
 const decrementBusketQuantity = async (itemId) => {
