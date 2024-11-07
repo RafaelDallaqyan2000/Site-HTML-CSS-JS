@@ -128,6 +128,7 @@ if (addBasketBtn) {
       addBasketBtn.classList.add('basket-btn');
       addBasketBtn.setAttribute('href', 'basket.html');
       isAddedToBasket = true;
+      addInBusket()
     }
   });
 }
@@ -152,9 +153,8 @@ if (characteristicsModal) {
   });
   
   closeCharacteristicsModal.addEventListener('click', () => {
-    addInBusket();
-    // characteristicsModal.classList.remove('show');
-    // document.body.style.overflow = '';
+    characteristicsModal.classList.remove('show');
+    document.body.style.overflow = '';
   });
 }
 
