@@ -52,24 +52,7 @@ try {
 }
 
 // counter
-const counters = document.querySelectorAll('.counter');
-counters.forEach(counter => {
-  const increment = counter.querySelector('.increment');
-  const decrement = counter.querySelector('.decrement');
-  const value = counter.querySelector('.count-value');
-  let count = parseInt(value.textContent);
 
-  increment.addEventListener('click', () => {
-    count++;
-    value.textContent = count;
-  });
-  decrement.addEventListener('click', () => {
-    if (count > 0) {
-      count--;
-      value.textContent = count;
-    }
-  })
-})
 
 
 // order-modal
@@ -209,14 +192,14 @@ try {
 const showcaseUrl = 'https://24autoposter.ru/sound_healing/shop/showcase';
 const itemDetailsUrl = 'https://24autoposter.ru/sound_healing/shop/showcase/item';
 // const addInBusketUrl = 'https://24autoposter.ru/vkusnaya_argentina/shop/showcase/main';
-const addInBusketUrl = 'https://24autoposter.ru/sound_healing/shop/cart';
+const busketUrl = 'https://24autoposter.ru/sound_healing/shop/cart';
 
 async function handleClickCatalogItem(e) {
   
   await localStorage.setItem('catalogItemId', e.id);
   document.location.pathname = 'product-details.html';
   
-}
+};
 
 (async function fetchItemDetails() {
   try {
@@ -334,7 +317,6 @@ async function handleClickCatalogItem(e) {
 
 }());
 
-
 (async function fetchShowcaseItems() {
   
   if (pathname === '/index.html' || pathname === '/') {
@@ -413,34 +395,189 @@ async function handleClickCatalogItem(e) {
 }());
 
 
+function removeCountItem(element) {
+  console.log(element);
+  
+}
+
+(async function getBusketData() {
+  
+  if(pathname === '/basket.html') {
+    try {
+      // const itemId = localStorage.getItem('catalogItemId');
+      const response = await fetch(busketUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: 795363892,
+          // item_id: +itemId
+        })
+      });
+    
+      if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+      
+      const data = await response.json();
+      const busketItems = data.cartItems;
+      localStorage.setItem('busketItems', busketItems);
+      console.log(busketItems, 'ss');
+      
+
+      const busketItemsContainer = document.getElementById('basket-cards');
+      
+      for (let key in busketItems) {
+        if (busketItems.hasOwnProperty(key)) {
+          const item = busketItems[key];
+          let quantity = item?.quantity;
+          let price = item?.price;
+          let itemPrice = price / quantity;
+
+          // Создаем элемент для каждого объекта
+          const productDiv = document.createElement('div');
+          productDiv.className = 'product';
+          productDiv.id = item?.id;
+
+          // Создаем левый контейнер
+          const productLeftBox = document.createElement('div');
+          productLeftBox.className = 'product-left__box';
+
+          // Создаем элемент изображения
+          const productImg = document.createElement('img');
+          productImg.className = 'product-img';
+          productImg.src = item?.img;
+          productImg.alt = '';
+          productImg.width = 62;
+          productImg.height = 62;
+
+          // Создаем контейнер для имени и счетчика
+          const productInfo = document.createElement('div');
+
+          // Создаем элемент заголовка для имени продукта
+          const productName = document.createElement('h4');
+          productName.className = 'product-name';
+          productName.textContent = item?.name;
+
+          // Создаем контейнер для счетчика
+          const counterDiv = document.createElement('div');
+          counterDiv.className = 'counter';
+
+          // Создаем кнопку уменьшения количества
+          const decrementButton = document.createElement('button');
+          decrementButton.className = 'decrement';
+          decrementButton.addEventListener('click', () => {
+            quantity--;
+            quantitySpan.innerText = quantity;
+            price = price - itemPrice;
+            productPrice.textContent = `${price} Р`;
+            if(quantity <= 0) {
+              productDiv.style.display = 'none';
+            }
+          });
+
+          // Создаем элемент для отображения количества
+          const quantitySpan = document.createElement('span');
+          quantitySpan.id = 'quantity';
+          quantitySpan.className = 'count-value';
+          quantitySpan.innerText = quantity;
+
+          // Создаем кнопку увеличения количества
+          const incrementButton = document.createElement('button');
+          incrementButton.className = 'increment';
+          incrementButton.addEventListener('click', () => {
+            console.log(price);
+            quantity++;
+            quantitySpan.innerText = quantity;
+            price = price + itemPrice;
+            productPrice.textContent = `${price} Р`;
+          })
+
+          // Создаем элемент для отображения цены
+          const productPrice = document.createElement('h4');
+          productPrice.className = 'product-price';
+          productPrice.textContent = `${price} Р`;
+
+          // Собираем элементы вместе
+          counterDiv.appendChild(decrementButton);
+          counterDiv.appendChild(quantitySpan);
+          counterDiv.appendChild(incrementButton);
+
+          productInfo.appendChild(productName);
+          productInfo.appendChild(counterDiv);
+
+          productLeftBox.appendChild(productImg);
+          productLeftBox.appendChild(productInfo);
+
+          productDiv.appendChild(productLeftBox);
+          productDiv.appendChild(productPrice);
+
+
+          console.log(busketItemsContainer);
+          busketItemsContainer.appendChild(productDiv);
+          // Добавляем в контейнер
+        }
+    }
+    
+      // busketItems.forEach(e => {
+      //   const basketCart = document.createElement('div');
+      //   basketCart.innerHTML = `<div class="product">
+      //         <div class="product-left__box">
+      //           <img class="product-img" src="images/catalog-img-1.png" alt="" width="62" height="62">
+      //           <div>
+      //             <h4 class="product-name">Ден ден дайко</h4>
+      //             <div class="counter">
+      //               <button class="decrement"></button>
+      //               <span class="count-value">1</span>
+      //               <button class="increment"></button>
+      //             </div>
+      //           </div>
+      //         </div>
+      //         <h4 class="product-price">1000 Р</h4>
+      //       </div>`;
+
+      //       console.log('ss');
+            
+
+
+      // });
+
+      
+      
+      return data;
+    } catch (error) {}
+  }
+}());
+
+
 async function addInBusket() {
-console.log('sss');
 
   try {
     const itemId = localStorage.getItem('catalogItemId');
-    const response = await fetch(addInBusketUrl, {
+    const response = await fetch(busketUrl, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         chat_id: 795363892,
         item_id: +itemId
       })
     });
-  
+    
     if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
     
     const data = await response.json();
-
-    localStorage.setItem('busketItems', )
+    
+    // localStorage.setItem('busketItems', )
     return data;
   } catch (error) {}
-}
+  
+};
+
 
 // try {
-//   const swiper = new Swiper('.swiper', {
-//     // Optional parameters
+  //   const swiper = new Swiper('.swiper', {
+    //     // Optional parameters
 //     direction: 'horizontal',
 //     loop: true,
   
