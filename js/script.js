@@ -61,18 +61,8 @@ if (orderModal) {
   const openOrderModal = document.querySelector('.order-btn');
   const closeOrderModal = orderModal.querySelector('.close-modal');
 
-
-  openOrderModal.addEventListener('click', () => {
-    orderModal.classList.add('show');
-    document.body.style.overflow = 'hidden';
-  });
-
-  closeOrderModal.addEventListener('click', () => {
-    orderModal.classList.remove('show');
-    document.body.style.overflow = '';
-  });
+  openOrderModal.addEventListener('click', placeAnOrder);
 }
-
 
 // accordions
 const accordion = document.querySelectorAll('.accordion');
@@ -111,7 +101,7 @@ if (addBasketBtn) {
       addBasketBtn.classList.add('basket-btn');
       addBasketBtn.setAttribute('href', 'basket.html');
       isAddedToBasket = true;
-      addInBusket()
+      addInBusket();
     }
   });
 }
@@ -193,7 +183,12 @@ const showcaseUrl = 'https://24autoposter.ru/sound_healing/shop/showcase';
 const itemDetailsUrl = 'https://24autoposter.ru/sound_healing/shop/showcase/item';
 // const addInBusketUrl = 'https://24autoposter.ru/vkusnaya_argentina/shop/showcase/main';
 const busketUrl = 'https://24autoposter.ru/sound_healing/shop/cart';
+const getRedirectPayUrl = 'https://24autoposter.ru/sound_healing/shop/pay';
+const placeOrderUrl = 'https://24autoposter.ru/sound_healing/shop/order';
 
+
+const chat_id = 795363892;
+let cartItems = {};
 async function handleClickCatalogItem(e) {
   
   await localStorage.setItem('catalogItemId', e.id);
@@ -394,10 +389,31 @@ async function handleClickCatalogItem(e) {
   };
 }());
 
+const decrementBusketQuantity = async (itemId) => {
+  try {
+    const busketIncrementUrl = `https://24autoposter.ru/sound_healing/shop/cart/${chat_id}/items/${itemId}`;
 
-function removeCountItem(element) {
-  console.log(element);
+    // const itemId = localStorage.getItem('catalogItemId');
+    const response = await fetch(busketIncrementUrl, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_id: chat_id,
+        item_id: +itemId
+      })
+    });
   
+    if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+    
+    const data = await response.json();
+
+    cartItems = data.cartItems;
+    localStorage.setItem('busketItems', data.cartItems);
+    return data; // возвращает JSON с объектами магазина
+
+  } catch(error) {};
 }
 
 (async function getBusketData() {
@@ -411,7 +427,7 @@ function removeCountItem(element) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          chat_id: 795363892,
+          chat_id: chat_id,
           // item_id: +itemId
         })
       });
@@ -420,9 +436,8 @@ function removeCountItem(element) {
       
       const data = await response.json();
       const busketItems = data.cartItems;
-      localStorage.setItem('busketItems', busketItems);
-      console.log(busketItems, 'ss');
-      
+      cartItems = busketItems;
+      localStorage.setItem('busketItems', busketItems);      
 
       const busketItemsContainer = document.getElementById('basket-cards');
       
@@ -470,6 +485,7 @@ function removeCountItem(element) {
             quantitySpan.innerText = quantity;
             price = price - itemPrice;
             productPrice.textContent = `${price} Р`;
+            decrementBusketQuantity(item?.id);
             if(quantity <= 0) {
               productDiv.style.display = 'none';
             }
@@ -485,11 +501,11 @@ function removeCountItem(element) {
           const incrementButton = document.createElement('button');
           incrementButton.className = 'increment';
           incrementButton.addEventListener('click', () => {
-            console.log(price);
             quantity++;
             quantitySpan.innerText = quantity;
             price = price + itemPrice;
             productPrice.textContent = `${price} Р`;
+            addInBusket(item?.id);
           })
 
           // Создаем элемент для отображения цены
@@ -517,39 +533,13 @@ function removeCountItem(element) {
           // Добавляем в контейнер
         }
     }
-    
-      // busketItems.forEach(e => {
-      //   const basketCart = document.createElement('div');
-      //   basketCart.innerHTML = `<div class="product">
-      //         <div class="product-left__box">
-      //           <img class="product-img" src="images/catalog-img-1.png" alt="" width="62" height="62">
-      //           <div>
-      //             <h4 class="product-name">Ден ден дайко</h4>
-      //             <div class="counter">
-      //               <button class="decrement"></button>
-      //               <span class="count-value">1</span>
-      //               <button class="increment"></button>
-      //             </div>
-      //           </div>
-      //         </div>
-      //         <h4 class="product-price">1000 Р</h4>
-      //       </div>`;
 
-      //       console.log('ss');
-            
-
-
-      // });
-
-      
-      
       return data;
     } catch (error) {}
   }
 }());
 
-
-async function addInBusket() {
+async function addInBusket(id) {
 
   try {
     const itemId = localStorage.getItem('catalogItemId');
@@ -559,8 +549,34 @@ async function addInBusket() {
       'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        chat_id: 795363892,
-        item_id: +itemId
+        chat_id: chat_id,
+        item_id: +id || +itemId
+      })
+    });
+    
+    if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+    
+    const data = await response.json();
+    cartItems = data.cartItems;
+    localStorage.setItem('busketItems', data.cartItems);
+    return data;
+  } catch (error) {}
+  
+};
+
+async function placeAnOrder() {
+  // const baskets = localStorage.getItem('busketItems');
+  
+  try {
+    const response = await fetch(placeOrderUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_id: chat_id,
+        cartItems 
+        // item_id: +id || +itemId
       })
     });
     
@@ -570,10 +586,8 @@ async function addInBusket() {
     
     // localStorage.setItem('busketItems', )
     return data;
-  } catch (error) {}
-  
-};
-
+  } catch (error) {} 
+}
 
 // try {
   //   const swiper = new Swiper('.swiper', {

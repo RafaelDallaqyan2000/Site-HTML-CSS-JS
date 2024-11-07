@@ -748,7 +748,7 @@ main::before {
 }
 
 .basket-page {
-  padding-bottom: 160px;
+  height: 100vh;
   position: relative;
   z-index: 1;
 }
