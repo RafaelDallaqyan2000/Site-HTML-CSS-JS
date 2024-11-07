@@ -208,7 +208,8 @@ try {
 // URL-ы API
 const showcaseUrl = 'https://24autoposter.ru/sound_healing/shop/showcase';
 const itemDetailsUrl = 'https://24autoposter.ru/sound_healing/shop/showcase/item';
-const addInBusketUrl = 'https://24autoposter.ru/vkusnaya_argentina/shop/showcase/main';
+// const addInBusketUrl = 'https://24autoposter.ru/vkusnaya_argentina/shop/showcase/main';
+const addInBusketUrl = 'https://24autoposter.ru/sound_healing/shop/cart';
 
 async function handleClickCatalogItem(e) {
   
@@ -259,7 +260,7 @@ async function handleClickCatalogItem(e) {
 
           newElement.innerHTML = `
             <div class='product-details__img' style="display: flex; justify-content: center; margin-top: 20px">
-                <video width="400px" height="300" controls>
+                <video width="350" height="300" controls>
                   <source src="${data.video[0]}" type="video/mp4" />
                   <source src="${data.video[0]}" type="video/webm" />
                   Your browser does not support the video tag.
@@ -417,19 +418,22 @@ console.log('sss');
 
   try {
     const itemId = localStorage.getItem('catalogItemId');
-    const response = await fetch(itemDetailsUrl, {
-      method: 'POST',
+    const response = await fetch(addInBusketUrl, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id: +itemId
+        chat_id: 795363892,
+        item_id: +itemId
       })
     });
   
     if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
     
     const data = await response.json();
+
+    localStorage.setItem('busketItems', )
     return data;
   } catch (error) {}
 }
