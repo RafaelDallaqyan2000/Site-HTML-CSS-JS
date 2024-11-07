@@ -30,52 +30,16 @@
       </div>
       <div class="container">
         <div class="product-details">
-
-          <div class="swiper">
-            <div class="swiper-wrapper">
-              <!-- Slides -->
-              <div class="swiper-slide">
-                <div class="product-details__img">
-                  <img class="product-img" src="images/catalog-img-1.png" alt="">
-                  <img class="saved-icon" src="images/icons/saved-2.svg" alt="">
-                </div>
-              </div>
-              <div class="swiper-slide">
-                <div class="product-details__img">
-                  <img class="product-img" src="images/article-img-2.png" alt="">
-                  <img class="saved-icon" src="images/icons/saved-2.svg" alt="">
-                </div>
-              </div>
-              <div class="swiper-slide">
-                <div class="product-details__img">
-                  <img class="product-img" src="images/article-img-3.png" alt="">
-                  <img class="saved-icon" src="images/icons/saved-2.svg" alt="">
-                </div>
-              </div>
-            </div>
+            <div class="swiper">
+            <div class="swiper-wrapper" id="swiper-wrapper-images"></div>
             <div class="swiper-pagination"></div>
-
-          <!-- <div class="product-details__img">
-            <img class="product-img" src="images/catalog-img-1.png" alt="">
-            <img class="saved-icon" src="images/icons/saved-2.svg" alt="">
-          </div> -->
-
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
         </div>
 
           <div class="product-info">
-            <div class="product-info__header">
-              <h2 class="product-info__title">Ден ден дайко</h2>
-              <div class="price-box">
-                <span class="price">990 Р</span>
-              </div>
-            </div>
-            <p class="product-info__desc">
-              Добавьте элемент небесного великолепия в ваш интерьер с этим изысканным металлическим ангелом.
-              Изготовленный
-              из высококачественного металла, он представляет собой идеальное сочетание художественного мастерства и
-              прочности. Этот ангел станет не только изящным украшением для вашего дома, но и символом гармонии и
-              защиты.
-            </p>
+            <div class="product-info__header" id="product-header" ></div>
+            <p class="product-info__desc" id="product-description"></p>
           </div>
           <!-- <div class=""> -->
             <!-- <div class="box">
@@ -92,10 +56,9 @@
             <button class="product-characteristics show-more characteristics-btn">Смотреть характеристики товара</button>
           <!-- </div> -->
           <div id="carousel-new" class="carousel-new">
-            <div id="swiper-new" class="swiper-wrapper swiper-new">
-              
-            </div>
+            <div id="swiper-new" class="swiper-wrapper swiper-new"></div>
           </div>
+
           <div class="service-info">
             <h2 class="service-info__title">Полезная информация</h2>
             <div class="service-info__swiper swiper-container">
@@ -215,41 +178,9 @@
   </div>
 
   <div class="characteristics-modal product-characteristics">
-    <button class="characteristics-modal__close"></button>
-    <div class="characteristics-box">
-      <div class="box">
-        <p>
-          вес - <span>0.1</span>
-        </p>
-        <p>
-          в длину - <span>27см</span>
-        </p>
-        <p>
-          в ширину - <span>11см</span>
-        </p>
-      </div>
-      <div class="box">
-        <p>
-          вес - <span>0.1</span>
-        </p>
-        <p>
-          в длину - <span>27см</span>
-        </p>
-        <p>
-          в ширину - <span>11см</span>
-        </p>
-      </div>
-      <div class="box">
-        <p>
-          вес - <span>0.1</span>
-        </p>
-        <p>
-          в длину - <span>27см</span>
-        </p>
-        <p>
-          в ширину - <span>11см</span>
-        </p>
-      </div>
+    <button id="add-in-busket-btn" class="characteristics-modal__close"></button>
+    <div id="more-info" class="characteristics-box">
+      
     </div>
   </div>
 

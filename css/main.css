@@ -1073,6 +1073,7 @@ main::before {
   color: #000000;
 }
 .product-details .product-info__header {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1625,7 +1626,7 @@ main::before {
 }
 
 .product-characteristics {
-  border: 1px solid #f39871;
+  border: 3px solid #f39871;
   border-radius: 11px;
   background: #f8f5f3;
   padding: 7px 11px;
@@ -1688,6 +1689,11 @@ main::before {
   flex-direction: column;
   gap: 30px;
   margin-top: 27px;
+  min-height: 300px;
+}
+
+.characteristics-modal .characteristics-box p {
+  font-size: 16px;
 }
 
 @media screen and (max-width: 360px) {

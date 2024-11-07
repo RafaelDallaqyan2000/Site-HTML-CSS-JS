@@ -1,7 +1,6 @@
 "use strict";
 
 const pathname = document.location.pathname
-console.log(pathname);
 
 
 try {
@@ -23,23 +22,23 @@ try {
 } catch (error) {
 }
 
-try {
-const caruselNew = document.getElementById('swiper-new');
+// try {
+// const caruselNew = document.getElementById('swiper-new');
 
 
-for (let index = 0; index < 8; index++) {
-  const img = '<img src="../images/order-img-1.png" width="60" height="60" />';
-  const newDiv = document.createElement('div');
-  newDiv.setAttribute('class', 'swiper-slide swiper-slide-new');
-  // const newImg = document.createElement('img');
-  // caruselNew.appendChild(newDiv)
-  newDiv.innerHTML = img;
-  caruselNew.appendChild(newDiv);
+// for (let index = 0; index < 8; index++) {
+//   const img = '<img src="../images/order-img-1.png" width="60" height="60" />';
+//   const newDiv = document.createElement('div');
+//   newDiv.setAttribute('class', 'swiper-slide swiper-slide-new');
+//   // const newImg = document.createElement('img');
+//   // caruselNew.appendChild(newDiv)
+//   newDiv.innerHTML = img;
+//   caruselNew.appendChild(newDiv);
   
-}
-} catch(error) {
+// }
+// } catch(error) {
 
-}
+// }
 
 try {
   // categories-swiper
@@ -59,7 +58,6 @@ counters.forEach(counter => {
   const decrement = counter.querySelector('.decrement');
   const value = counter.querySelector('.count-value');
   let count = parseInt(value.textContent);
-  console.log(count);
 
   increment.addEventListener('click', () => {
     count++;
@@ -152,10 +150,11 @@ if (characteristicsModal) {
     characteristicsModal.classList.add('show');
     document.body.style.overflow = 'hidden';
   });
-
+  
   closeCharacteristicsModal.addEventListener('click', () => {
-    characteristicsModal.classList.remove('show');
-    document.body.style.overflow = '';
+    addInBusket();
+    // characteristicsModal.classList.remove('show');
+    // document.body.style.overflow = '';
   });
 }
 
@@ -208,39 +207,131 @@ try {
 
 // URL-ы API
 const showcaseUrl = 'https://24autoposter.ru/sound_healing/shop/showcase';
-// const showcaseUrl = 'https://24autoposter.ru/vkusnaya_argentina/shop/showcase/main';
 const itemDetailsUrl = 'https://24autoposter.ru/sound_healing/shop/showcase/item';
-
-
-function getItemDetails(itemId) {
-
-}
+const addInBusketUrl = 'https://24autoposter.ru/vkusnaya_argentina/shop/showcase/main';
 
 async function handleClickCatalogItem(e) {
-  // console.log(e, '<<', document.location);
-           
-  try {
-    const response = await fetch(itemDetailsUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: 123
-      })
-    });
-    if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
-    const data = await response.json();
-    
-    document.location.pathname = 'product-details.html';
-    // Обработка категорий и каталога
-    return data; // возвращает JSON с объектами магазина
-  } catch (error) {
-    console.error('Ошибка получения списка товаров:', error);
-    document.location.pathname = 'product-details.html';
-  }
-
+  
+  await localStorage.setItem('catalogItemId', e.id);
+  document.location.pathname = 'product-details.html';
+  
 }
+
+(async function fetchItemDetails() {
+  try {
+  let catalogItemId = localStorage.getItem('catalogItemId');
+    if(pathname === '/product-details.html') {
+      const response = await fetch(itemDetailsUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: +catalogItemId
+        })
+      });
+
+      if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+      
+      const data = await response.json();
+
+      document.getElementById('product-header').innerHTML = `
+      <h2 class="product-info__title">${data.name}</h2>
+      <div class="price-box">
+        <span class="price">${data.price} Р</span>
+      </div>`;
+
+      document.getElementById('product-description').innerText = data?.description;
+
+      
+      
+      document.getElementById('more-info').innerHTML = `
+        <div class="box">
+          <p>${data?.technicalSpecifications}</p>
+        </div>`
+        
+        const swiperWrapperImages = document.getElementById('swiper-wrapper-images');
+
+        if(data?.video?.length > 0) {
+          const newElement = document.createElement('div');
+          newElement.className = 'swiper-slide'
+          swiperWrapperImages.appendChild(newElement);
+
+          newElement.innerHTML = `
+            <div class='product-details__img' style="display: flex; justify-content: center; margin-top: 20px">
+                <video width="400px" height="300" controls>
+                  <source src="${data.video[0]}" type="video/mp4" />
+                  <source src="${data.video[0]}" type="video/webm" />
+                  Your browser does not support the video tag.
+                </video>
+            </div>`;
+        }
+        
+        
+        
+      data?.img?.forEach((href) => {
+                
+        const swiperContainer = document.createElement('div');
+        const productDetailsContainer = document.createElement('div');
+        const productImg = document.createElement('img');
+        const savedIcon = document.createElement('img');
+        swiperContainer.className ='swiper-slide';
+        productDetailsContainer.className = 'product-details__img';
+        productImg.className = 'product-img';
+        productImg.src = `${href}`;
+
+        savedIcon.className ='saved-icon';
+        savedIcon.src = 'images/icons/saved-2.svg'
+        
+        swiperWrapperImages.appendChild(swiperContainer);
+        swiperContainer.appendChild(productDetailsContainer);
+        productDetailsContainer.appendChild(productImg);
+        productDetailsContainer.appendChild(savedIcon);
+        
+      })
+
+      
+      const caruselNew = document.getElementById('swiper-new');
+
+      for (let i = 0; i < data?.subcategory.length; i++) {
+        const img = `<img src="${data?.subcategory[i]?.img}" width="60" height="60" />`;
+        const newDiv = document.createElement('div');
+        newDiv.setAttribute('class', 'swiper-slide swiper-slide-new');
+
+        newDiv.innerHTML = img;
+        caruselNew.appendChild(newDiv);        
+      }
+
+
+      new Swiper('.swiper', {
+        // Optional parameters
+        direction: 'horizontal',
+        loop: true,
+      
+        // If we need pagination
+        pagination: {
+          el: '.swiper-pagination',
+        },
+      
+        // Navigation arrows
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      
+        // And if we need scrollbar
+        scrollbar: {
+          el: '.swiper-scrollbar',
+        },
+      });
+
+
+
+      return data; // возвращает JSON с объектами магазина
+    }
+  } catch(error) {};
+
+}());
 
 
 (async function fetchShowcaseItems() {
@@ -292,6 +383,7 @@ async function handleClickCatalogItem(e) {
 
           newA.id = e.id;
           newA.className = 'catalog-card';
+          newA.dataset.id = e.id;
           newA.onclick = () => handleClickCatalogItem(e);
           
           newImg.className = "catalog-card__img";
@@ -309,8 +401,8 @@ async function handleClickCatalogItem(e) {
 
           catalogContainer.appendChild(newA);
 
-      })
-      
+      });
+
       // Обработка категорий и каталога
       return data; // возвращает JSON с объектами магазина
     } catch (error) {
@@ -320,54 +412,50 @@ async function handleClickCatalogItem(e) {
 }());
 
 
-// Функция для получения описания конкретного продукта (POST запрос)
-// async function fetchItemDetails() {
-  //   try {
-    //     const response = await fetch(showcaseUrl, {
-      //       method: 'POST',
-      //       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify({ id: 795363892 }) // Захардкоженный ID
-//     });
+async function addInBusket() {
+console.log('sss');
+
+  try {
+    const itemId = localStorage.getItem('catalogItemId');
+    const response = await fetch(itemDetailsUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: +itemId
+      })
+    });
+  
+    if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
     
-//     if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
-    
-//     const data = await response.json();
-//     console.log('Описание товара:', data);
-    
-//     return data; // возвращает JSON с описанием продукта
-//   } catch (error) {
-//     console.error('Ошибка получения описания товара:', error);
-//   }
-// }
-// Пример использования функций
-// fetchShowcaseItems(); // Вызов для получения всех товаров
-// fetchItemDetails()
-// Замените "this item id" на нужный ID продукта
-// fetchItemDetails("this item id"); // Вызов для получения описания конкретного товара
-try {
-  const swiper = new Swiper('.swiper', {
-    // Optional parameters
-    direction: 'horizontal',
-    loop: true,
-  
-    // If we need pagination
-    pagination: {
-      el: '.swiper-pagination',
-    },
-  
-    // Navigation arrows
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-  
-    // And if we need scrollbar
-    scrollbar: {
-      el: '.swiper-scrollbar',
-    },
-  });
-} catch (e) {
-  
+    const data = await response.json();
+    return data;
+  } catch (error) {}
 }
+
+// try {
+//   const swiper = new Swiper('.swiper', {
+//     // Optional parameters
+//     direction: 'horizontal',
+//     loop: true,
+  
+//     // If we need pagination
+//     pagination: {
+//       el: '.swiper-pagination',
+//     },
+  
+//     // Navigation arrows
+//     navigation: {
+//       nextEl: '.swiper-button-next',
+//       prevEl: '.swiper-button-prev',
+//     },
+  
+//     // And if we need scrollbar
+//     scrollbar: {
+//       el: '.swiper-scrollbar',
+//     },
+//   });
+// } catch (e) {
+  
+// }
