@@ -2,7 +2,7 @@
 
 const pathname = document.location.pathname;
 let userInfo = {};
-
+let cartItems = {};
 
 try {
   var swiper = new Swiper('.service-info__swiper', {
@@ -63,6 +63,7 @@ if (orderModal) {
   const closeOrderModal = orderModal.querySelector('.close-modal');
 
   openOrderModal.addEventListener('click', placeAnOrder);
+
 }
 
 // accordions
@@ -182,17 +183,96 @@ try {
 // URL-ы API
 const showcaseUrl = 'https://24autoposter.ru/sound_healing/shop/showcase';
 const itemDetailsUrl = 'https://24autoposter.ru/sound_healing/shop/showcase/item';
-// const addInBusketUrl = 'https://24autoposter.ru/vkusnaya_argentina/shop/showcase/main';
 const busketUrl = 'https://24autoposter.ru/sound_healing/shop/cart';
 const getRedirectPayUrl = 'https://24autoposter.ru/sound_healing/shop/pay';
 const placeOrderUrl = 'https://24autoposter.ru/sound_healing/shop/order/create';
 const userInfoUrl = 'https://24autoposter.ru/sound_healing/shop/register';
+const myOrdersUrl = 'https://24autoposter.ru/sound_healing/shop/order/list';
 
 
 const chat_id = 795363892;
-let cartItems = {};
+
+
+(async function fetchShowcaseItems() {
+  try {
+    const response = await fetch(myOrdersUrl, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id
+        })
+      });
+      
+      if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+      
+      const data = await response.json();
+
+      const ordersContainer = document.getElementById('orders-container');
+
+      const myOrdersCards = document.createElement('div');
+      myOrdersCards.className = 'my-orders__cards';
+
+      // Создаем элемент для даты
+      const dateLabel = document.createElement('span');
+      dateLabel.className = 'my-orders__cards-label';
+      dateLabel.textContent = '16 Февраля';
+      myOrdersCards.appendChild(dateLabel);
+
+      function createOrderCard(imgSrc, name, price, statusText, statusClass) {
+        const orderCard = document.createElement('div');
+        orderCard.className = 'my-orders__card';
+
+        // Создаем левый блок с изображением и названием
+        const leftBox = document.createElement('div');
+        leftBox.className = 'left-box';
+
+        const cardImg = document.createElement('img');
+        cardImg.className = 'my-orders__card-img';
+        cardImg.src = imgSrc;
+        cardImg.alt = '';
+
+        const cardName = document.createElement('h4');
+        cardName.className = 'my-orders__card-name';
+        cardName.textContent = name;
+
+        leftBox.appendChild(cardImg);
+        leftBox.appendChild(cardName);
+
+        // Создаем элемент цены
+        const cardPrice = document.createElement('h3');
+        cardPrice.className = 'my-orders__card-price';
+        cardPrice.textContent = `${price} Р`;
+
+        // Создаем кнопку со статусом
+        const cardButton = document.createElement('a');
+        cardButton.className = `card-btn ${statusClass}`;
+        cardButton.href = '#!';
+        cardButton.textContent = statusText;
+
+        // Добавляем элементы в карточку заказа
+        orderCard.appendChild(leftBox);
+        orderCard.appendChild(cardPrice);
+        orderCard.appendChild(cardButton);
+
+        // Добавляем карточку заказа в контейнер my-orders__cards
+        myOrdersCards.appendChild(orderCard);
+    }
+
+
+
+      return data;
+  } catch (error) {}
+}())
 
 async function editUserInfo() {
+  let email = document.getElementById('user-email').value;
+  let phone = document.getElementById('user-tel').value;
+  let name = document.getElementById('user-name').value;
+  let address = document.getElementById('user-address').value;
+  let comment = document.getElementById('user-comment').value;
+
   try {
     const response = await fetch(userInfoUrl, {
       method: 'PUT',
@@ -200,12 +280,12 @@ async function editUserInfo() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        "chat_id": 795363892,
-        "email": "qwerty@e.ru",
-        "phone": "+79110002233",
-        "full_name": "Ivan Ivanov",
-        "delivery_address":"RF, MSK, Read Squarer 1",
-        "comment": "Lenin's Mavzoley"
+        chat_id,
+        email,
+        phone,
+        full_name: name,
+        delivery_address: address,
+        comment
       })
     });
 
@@ -675,27 +755,46 @@ async function placeAnOrder() {
 
   // const baskets = localStorage.getItem('busketItems');
   
-  try {
-    const response = await fetch(placeOrderUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        chat_id: chat_id,
-        // cartItems 
-        // item_id: +id || +itemId
+  if(Object.keys(cartItems).length) {
+    
+    try {
+      const response = await fetch(placeOrderUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: chat_id,
+          // cartItems 
+          // item_id: +id || +itemId
+        })
+      });
+      
+      if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+      
+      const data = await response.json();
+
+      editUserInfo();
+
+      orderModal.style.display = 'flex';
+
+      document.querySelector('.close-modal').addEventListener('click', () => {
+        orderModal.style.display = 'none';
       })
-    });
-    
-    if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
-    
-    const data = await response.json();
-    
-    // localStorage.setItem('busketItems', )
-    return data;
-  } catch (error) {} 
+      
+      return data;
+    } catch (error) {
+      orderModal.style.display = 'block';
+      document.getElementById('title-order').innerText = 'Ошибка при оформлении заказа';
+      document.getElementById('is-success').style.display = 'none';
+      document.querySelector('.close-modal').addEventListener('click', () => {
+        orderModal.style.display = 'none';
+      })
+    } 
+  }
 }
+
+
 
 // try {
   //   const swiper = new Swiper('.swiper', {
