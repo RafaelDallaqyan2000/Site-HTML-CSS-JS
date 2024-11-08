@@ -1,6 +1,7 @@
 "use strict";
 
-const pathname = document.location.pathname
+const pathname = document.location.pathname;
+let userInfo = {};
 
 
 try {
@@ -184,12 +185,88 @@ const itemDetailsUrl = 'https://24autoposter.ru/sound_healing/shop/showcase/item
 // const addInBusketUrl = 'https://24autoposter.ru/vkusnaya_argentina/shop/showcase/main';
 const busketUrl = 'https://24autoposter.ru/sound_healing/shop/cart';
 const getRedirectPayUrl = 'https://24autoposter.ru/sound_healing/shop/pay';
-const placeOrderUrl = 'https://24autoposter.ru/sound_healing/shop/order';
+const placeOrderUrl = 'https://24autoposter.ru/sound_healing/shop/order/create';
+const userInfoUrl = 'https://24autoposter.ru/sound_healing/shop/register';
 
 
 const chat_id = 795363892;
 let cartItems = {};
 
+async function editUserInfo() {
+  try {
+    const response = await fetch(userInfoUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "chat_id": 795363892,
+        "email": "qwerty@e.ru",
+        "phone": "+79110002233",
+        "full_name": "Ivan Ivanov",
+        "delivery_address":"RF, MSK, Read Squarer 1",
+        "comment": "Lenin's Mavzoley"
+      })
+    });
+
+    if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+
+    const data = await response.json();
+    document.getElementById('user-name').innerText = data.name;
+    document.getElementById('user-email').innerText = data.email;
+    document.getElementById('user-phone').innerText = data.phone;
+  } catch (error) {
+    console.error(error, '<<<');
+  }
+}
+(async function getUserInfo() {
+  try {
+    const response = await fetch(userInfoUrl, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id
+        })
+      });
+      
+      if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+      
+      const data = await response.json();
+
+      userInfo = data;
+      if(pathname === '/profile.html') {
+        let first_name = data.full_name.split(' ')[0];
+        let last_name = data.full_name.split(' ')[1];
+
+        document.getElementById('user-first_name').setAttribute('value', first_name);
+        document.getElementById('user-last_name').setAttribute('value', last_name);
+        document.getElementById('user-phone').setAttribute('value', data.phone);
+        document.getElementById('user-email').setAttribute('value', data.email);
+        document.getElementById('user-address').setAttribute('value', data.delivery_address);
+      }
+      if(pathname === '/index.html' || pathname === '/') {
+        document.getElementById('user-name-title').innerText = data.full_name;
+
+      } else if(pathname === '/profile-page.html') {
+        document.getElementById('user-name-title').innerText = data.full_name;
+        document.getElementById('user-telephone').innerText = data.phone;
+        document.getElementById('user-email').innerText = data.email;
+
+      } else if(pathname === '/basket.html') {
+
+        document.getElementById('user-email').setAttribute('value', data.email);
+        document.getElementById('user-tel').setAttribute('value', data.phone);;
+        document.getElementById('user-name').setAttribute('value',data.full_name);
+        document.getElementById('user-address').setAttribute('value', data.delivery_address);
+        document.getElementById('user-comment').innerText= data.comment;
+      }
+  
+    } catch (error) {
+      console.error(error, '<<<');
+    }
+}())
 async function handleClickCatalogItem(e) {
   
   await localStorage.setItem('catalogItemId', e.id);
@@ -595,6 +672,7 @@ async function addInBusket(id) {
 };
 
 async function placeAnOrder() {
+
   // const baskets = localStorage.getItem('busketItems');
   
   try {
@@ -605,7 +683,7 @@ async function placeAnOrder() {
       },
       body: JSON.stringify({
         chat_id: chat_id,
-        cartItems 
+        // cartItems 
         // item_id: +id || +itemId
       })
     });
