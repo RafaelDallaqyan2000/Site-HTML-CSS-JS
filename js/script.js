@@ -194,6 +194,12 @@ const chat_id = 795363892;
 
 
 (async function fetchShowcaseItems() {
+  if(pathname === '/my-orders.html') {
+    let status = {
+      'new': {title: 'В пути', class: 'yellow-btn'},
+      'done': {title: 'Доставлен', class: 'green-btn'},
+      'reject': {title: 'Отменен', class: 'red-btn'},
+    }
   try {
     const response = await fetch(myOrdersUrl, {
       method: 'POST',
@@ -211,15 +217,18 @@ const chat_id = 795363892;
 
       const ordersContainer = document.getElementById('orders-container');
 
+      data.forEach(order => {
+        
       const myOrdersCards = document.createElement('div');
       myOrdersCards.className = 'my-orders__cards';
 
       // Создаем элемент для даты
       const dateLabel = document.createElement('span');
       dateLabel.className = 'my-orders__cards-label';
-      dateLabel.textContent = '16 Февраля';
+      dateLabel.textContent = formatDate(order.time);
       myOrdersCards.appendChild(dateLabel);
 
+      
       function createOrderCard(imgSrc, name, price, statusText, statusClass) {
         const orderCard = document.createElement('div');
         orderCard.className = 'my-orders__card';
@@ -258,12 +267,18 @@ const chat_id = 795363892;
 
         // Добавляем карточку заказа в контейнер my-orders__cards
         myOrdersCards.appendChild(orderCard);
-    }
-
-
+        ordersContainer.appendChild(myOrdersCards)
+      }
+      
+      order.cartItemList.forEach(item => {
+        createOrderCard(item.image, item.name, item.price, status[order.status].title, status[order.status].class); 
+      });
+    })
 
       return data;
   } catch (error) {}
+}
+
 }())
 
 async function editUserInfo() {
@@ -751,6 +766,33 @@ async function addInBusket(id) {
   
 };
 
+async function getUcassInfo() {
+
+  // const baskets = localStorage.getItem('busketItems');
+  
+  if(Object.keys(cartItems).length) {
+    
+    try {
+      const response = await fetch(getRedirectPayUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id,
+          // cartItems 
+          // item_id: +id || +itemId
+        })
+      });
+      
+      if (!response.ok) throw new Error(`Ошибка при загрузке: ${response.statusText}`);
+      
+      const data = await response.json();
+      console.log(data, 'eueeeeee');
+      
+    } catch (error) {}
+  }}
+
 async function placeAnOrder() {
 
   // const baskets = localStorage.getItem('busketItems');
@@ -774,13 +816,14 @@ async function placeAnOrder() {
       
       const data = await response.json();
 
-      editUserInfo();
+      // editUserInfo();
 
-      orderModal.style.display = 'flex';
+      getUcassInfo()
+      // orderModal.style.display = 'flex';
 
-      document.querySelector('.close-modal').addEventListener('click', () => {
-        orderModal.style.display = 'none';
-      })
+      // document.querySelector('.close-modal').addEventListener('click', () => {
+      //   orderModal.style.display = 'none';
+      // })
       
       return data;
     } catch (error) {
@@ -821,3 +864,23 @@ async function placeAnOrder() {
 // } catch (e) {
   
 // }
+
+
+
+
+
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+
+  // Массив названий месяцев на русском
+  const months = [
+      "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
+      "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"
+  ];
+
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+
+  return `${day} ${month}`;
+}
